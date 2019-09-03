@@ -46,9 +46,9 @@ class AboutMeField extends PureComponent {
     const sentence = this.getSentence();
     return (
       <div className="okc-app__about-me-field">
-        <h4 className="okc-app__about-me-field__question">
+        <h3 className="okc-app__about-me-field__question">
           {this.props.question}
-        </h4>
+        </h3>
         <input
           type="text"
           value={this.state.answer}

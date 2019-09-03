@@ -42,7 +42,7 @@ class Essay extends Component {
   render() {
     return (
       <div className="okc-app__essay-container">
-        <h3 className="okc-app__essay-header">Your essay text</h3>
+        <h2 className="okc-app__essay-header">Your essay text</h2>
         {this.props.isEditing ? (
           <textarea
             className="okc-app__essay-body okc-app__essay-body__textarea"

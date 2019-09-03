@@ -7,7 +7,7 @@ class AboutMe extends Component {
   render() {
     return (
       <div className="okc-app__about-me-container">
-        <h3 className="okc-app__about-me-header">About Me</h3>
+        <h2 className="okc-app__about-me-header">About Me</h2>
         <AboutMeFields />
       </div>
     );

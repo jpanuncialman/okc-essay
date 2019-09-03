@@ -40,7 +40,6 @@ export function reducer(state = INITIAL_STATE, action) {
       // Creates array of sentences and sorts per specified fieldOrder
       //Also ads <strong> tags around answers from user input.
       //These will be used as dangerouslysetinnerhtml in the Essay component
-
       const fieldAnswers = state.fieldAnswers;
       const fieldOrder = state.fieldOrder;
 
@@ -59,9 +58,13 @@ export function reducer(state = INITIAL_STATE, action) {
         })
         .map(pair => {
           const [, sentence, answer] = pair;
+
+          //Wrap <strong> tags around each answer
           let sentenceModified = sentence.replace(
             answer,
             `<strong>${
+              //Check if answer is the first word in the sentence.
+              //If it is, capitalize it.
               checkIfAnswerIsFirstWord(sentence, answer)
                 ? capitalizeWord(answer)
                 : answer
@@ -70,32 +73,16 @@ export function reducer(state = INITIAL_STATE, action) {
           return sentenceModified;
         });
 
-      // let sentence = action.payload.sentence;
-      // let answer = action.payload.answer;
-      // let sentenceModified = sentence.replace(
-      //   answer,
-      //   `<strong>${
-      //     checkIfAnswerIsFirstWord(sentence, answer)
-      //       ? capitalizeWord(answer)
-      //       : answer
-      //   }</strong>`
-      // );
-
-      // if (essayRender.includes(sentenceModified)) {
-      //   essayRender = [...essayRender, sentenceModified];
-      // } else {
-      //   const ind = essayRender.indexOf(sentenceModified);
-      //   essayRender = [
-      //     ...essayRender.slice(0, ind),
-      //     ...essayRender.slice(ind + 1)
-      //   ];
-      // }
-      // }
-      // });
-
       return {
         ...state,
         essayRender: essayRender
+      };
+    }
+
+    case SAVE_ESSAY: {
+      return {
+        ...state,
+        essayText: action.payload
       };
     }
 
@@ -124,13 +111,6 @@ export function reducer(state = INITIAL_STATE, action) {
       };
     }
 
-    case SAVE_ESSAY: {
-      return {
-        ...state,
-        essayText: action.payload
-      };
-    }
-
     case TOGGLE_IS_EDITING: {
       //If clicking on "Start Over" (i.e. isEditing === true)
       //reset the essayText and fieldAnswers data to prevent
@@ -147,13 +127,6 @@ export function reducer(state = INITIAL_STATE, action) {
         };
     }
 
-    case INCREMENT_COUNTER: {
-      return {
-        ...state,
-        counter: state.counter + 1
-      };
-    }
-
     default:
       return state;
   }
@@ -165,10 +138,16 @@ export function modifyEssay(id, answer, sentence) {
   return { type: MODIFY_ESSAY };
 }
 
+export function saveEssay(essay) {
+  return { type: SAVE_ESSAY, payload: essay };
+}
+
 export function submitField({ id, answer, sentence }) {
   return dispatch => {
     //Creating promise to ensure modifyEssay action creator is dispatched
-    //after fieldName has been updated.
+    //after fieldName has been updated. This is because the MODIFY_ESSAY action
+    //requires data from the object and this will the data is in the object
+    //prior to dispatching the action.
     const submitProm = new Promise((res, rej) => {
       dispatch({
         type: SUBMIT_FIELD,
@@ -183,12 +162,4 @@ export function submitField({ id, answer, sentence }) {
 
 export function toggleIsEditing() {
   return { type: TOGGLE_IS_EDITING };
-}
-
-export function saveEssay(essay) {
-  return { type: SAVE_ESSAY, payload: essay };
-}
-
-export function increment() {
-  return { type: INCREMENT_COUNTER };
 }
