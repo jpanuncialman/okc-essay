@@ -10,7 +10,6 @@ export const MODIFY_ESSAY = "MADLIBS.MODIFY_ESSAY";
 export const SAVE_ESSAY = "MADLIBS.SAVE_ESSAY";
 export const SUBMIT_FIELD = "MADLIBS.SUBMIT_FIELD";
 export const TOGGLE_IS_EDITING = "MADLIBS.TOGGLE_IS_EDITING";
-export const INCREMENT_COUNTER = "MADLIBS.INCREMENT_COUNTER";
 
 // Initial state
 // ----------------------------------------------------------------------------
@@ -58,16 +57,17 @@ export function reducer(state = INITIAL_STATE, action) {
         })
         .map(pair => {
           const [, sentence, answer] = pair;
-
+          const sentenceTrim = sentence.trim();
+          const answerTrim = answer.trim();
           //Wrap <strong> tags around each answer
           let sentenceModified = sentence.replace(
             answer,
             `<strong>${
               //Check if answer is the first word in the sentence.
               //If it is, capitalize it.
-              checkIfAnswerIsFirstWord(sentence, answer)
-                ? capitalizeWord(answer)
-                : answer
+              checkIfAnswerIsFirstWord(sentenceTrim, answerTrim)
+                ? capitalizeWord(answerTrim)
+                : answerTrim
             }</strong>`
           );
           return sentenceModified;
@@ -94,7 +94,7 @@ export function reducer(state = INITIAL_STATE, action) {
       const sentence = action.payload.sentence;
 
       if (answer !== "") {
-        //Add property immutably (if answer provided is NOT blank)
+        //Add or update property immutably (if answer provided is NOT blank)
         const incomingAnswer = {
           [fieldName]: { answer, sentence }
         };
@@ -112,9 +112,9 @@ export function reducer(state = INITIAL_STATE, action) {
     }
 
     case TOGGLE_IS_EDITING: {
-      //If clicking on "Start Over" (i.e. isEditing === true)
+      //If users clicks on "Start Over" (i.e. isEditing === true),
       //reset the essayText and fieldAnswers data to prevent
-      //issues rendering if the essay text was edited.
+      //issues if the essay text was edited.
       if (state.isEditing)
         return {
           ...INITIAL_STATE,

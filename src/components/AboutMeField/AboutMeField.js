@@ -24,7 +24,6 @@ class AboutMeField extends PureComponent {
 
   componentDidUpdate(prevProps) {
     //Clears fields if edit button is clicked.
-    //This ensures there are no issues modifying
     if (prevProps.isEditing !== this.props.isEditing) {
       if (this.props.isEditing) this.setState({ answer: "" });
     }
@@ -35,6 +34,8 @@ class AboutMeField extends PureComponent {
   };
 
   getSentence = () => {
+    //Randomly select a sentence template and repalce "$answer" with
+    //user input.
     const sentenceArr = getTextTemplates(this.props.id);
     const randomInd = generateRandomInt(0, sentenceArr.length - 1);
     const answer = this.state.answer;
@@ -42,7 +43,6 @@ class AboutMeField extends PureComponent {
   };
 
   render() {
-    // const dispatch = this.props.dispatch;
     const sentence = this.getSentence();
     return (
       <div className="okc-app__about-me-field">
@@ -57,7 +57,6 @@ class AboutMeField extends PureComponent {
             //Only dispatch on change in value
             if (
               (!this.props.fieldAnswers[this.props.id] &&
-                // this.props.fileAnswers[this.props.id].answer &&
                 this.state.answer !== "") ||
               (this.props.fieldAnswers[this.props.id] &&
                 this.state.answer !==

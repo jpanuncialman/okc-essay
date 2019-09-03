@@ -1,3 +1,7 @@
+//Confirmed that the "bar" data would not be used in the app.
+//Left them commented out in case they would need to be added
+//back in in the future.
+
 export const FIELD_NAMES = {
   hometown: "hometown",
   favoriteFood: "favoriteFood",
